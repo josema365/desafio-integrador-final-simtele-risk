@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block titulo %}{{ m.titulo }} · SIMTELE-RISK{% endblock %}{% block contenido %}
+<h1>{{ n }}. {{ m.titulo }}</h1>
+<p><b>Pregunta:</b> {{ m.pregunta }}</p>
+<div class="panel"><b>Modelo:</b> <span class="mono">{{ m.modelo }}</span><br><b>Métodos:</b> {{ m.metodos }}</div>
+<h2>Escenarios</h2>
+<table><tr><th>Escenario</th><th>Definición (supuestos sintéticos)</th></tr>
+{% for t in TIPOS %}<tr><td><b>{{ ETIQUETA[t] }}</b></td><td>{{ m.escenarios[t] }}</td></tr>{% endfor %}</table>
+<p class="aviso">Prototipo de la Semana 1: modelo y escenarios definidos. La ejecución de los métodos se conecta en la Semana 2.</p>
+<a class="btn" href="{{ url_for('inicio') }}">Volver al inicio</a>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block contenido %}
+<h1>SIMTELE-RISK</h1>
+<p>Simulador educativo de <b>Métodos Numéricos</b> con cuatro casos de estudio. Cada módulo se ejecutará en tres escenarios: <b>NORMAL</b>, <b>ESTRÉS</b> y <b>MAL CONDICIONADO</b>.</p>
+<div class="tarjetas">
+{% for i, m in MODULOS.items() %}<a class="tarjeta" href="{{ url_for('modulo', n=i) }}"><div class="ico">{{ m.icono }}</div><h3>{{ i }}. {{ m.nombre }}</h3><div>{{ m.pregunta }}</div></a>{% endfor %}
+</div>{% endblock %}

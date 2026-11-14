@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block titulo %}SIMTELE-RISK{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}"></head>
+<body>
+<header><a class="logo" href="{{ url_for('inicio') }}">SIMTELE-RISK</a>
+<nav><a href="{{ url_for('inicio') }}">Inicio</a>{% for i, m in MODULOS.items() %}<a href="{{ url_for('modulo', n=i) }}">{{ m.nombre }}</a>{% endfor %}</nav></header>
+<main>{% block contenido %}{% endblock %}
+</body></html>
