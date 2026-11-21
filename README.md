@@ -38,7 +38,7 @@
 
 ## Criterio metodológico de evaluación
 
-Todas las simulaciones reportan métricas transversales de error ($E_{\text{abs}}$, $E_{\text{rel}}$, $E_{\%}$, residual relativo, número de condición $\kappa_2(A)$ y constante de Lebesgue $\Lambda_n$) bajo cuatro categorías estrictamente diferenciadas:
+Todas las simulaciones reportan métricas transversales de error ($E_{\text{abs}}$, $E_{\text{rel}}$, $E_{\text{pct}}$, residual relativo, número de condición $\kappa_2(A)$ y constante de Lebesgue $\Lambda_n$) bajo cuatro categorías estrictamente diferenciadas:
 
 1. **Riesgo físico modelado:** el resultado supera un umbral operativo del modelo (ej. distancia de frenado superior a la longitud disponible), aun cuando el error numérico sea despreciable.
 2. **Alta exigencia computacional:** problema bien condicionado que requiere mayor dimensión o paso más fino para converger.
