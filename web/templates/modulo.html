@@ -1,10 +1,13 @@
-{% extends "base.html" %}{% block titulo %}{{ m.titulo }} · SIMTELE-RISK{% endblock %}{% block contenido %}
-<h1>{{ n }}. {{ m.titulo }}</h1>
-<p><b>Pregunta:</b> {{ m.pregunta }}</p>
-<div class="panel"><b>Modelo:</b> <span class="mono">{{ m.modelo }}</span><br><b>Métodos:</b> {{ m.metodos }}</div>
-<h2>Escenarios</h2>
-<table><tr><th>Escenario</th><th>Definición (supuestos sintéticos)</th></tr>
-{% for t in TIPOS %}<tr><td><b>{{ ETIQUETA[t] }}</b></td><td>{{ m.escenarios[t] }}</td></tr>{% endfor %}</table>
-<p class="aviso">Prototipo de la Semana 1: modelo y escenarios definidos. La ejecución de los métodos se conecta en la Semana 2.</p>
-<a class="btn" href="{{ url_for('inicio') }}">Volver al inicio</a>
+{% extends "base.html" %}{% block titulo %}{{ m.TITULO }} · SIMTELE-RISK{% endblock %}{% block contenido %}
+<h1>{{ n }}. {{ m.TITULO }}</h1>
+<p><b>Pregunta:</b> {{ m.PREGUNTA }}</p>
+<div class="panel"><b>Modelo:</b> <span class="mono">{{ m.MODELO }}</span><br><b>Métodos:</b> {{ m.METODOS }}</div>
+<div class="tabs">{% for t in TIPOS %}<a class="{{ 'act' if t == tipo }}" href="{{ url_for('modulo', n=n, tipo=t) }}">{{ ETIQUETAS[t] }}</a>{% endfor %}</div>
+<p class="desc">{{ desc }}</p>
+{% if errores %}<div class="errores"><b>Corrige estos parámetros:</b><ul>{% for e in errores %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<form method="post" action="{{ url_for('ejecutar', n=n) }}"><input type="hidden" name="tipo" value="{{ tipo }}">
+<div class="campos">{% for s in spec %}<label>{{ s.label }}{% if s.unidad %} <small>[{{ s.unidad }}]</small>{% endif %}
+<input type="text" inputmode="decimal" name="{{ s.key }}" value="{{ vals[s.key] }}"><small class="rango">rango: {{ s.min }} – {{ s.max }}</small></label>{% endfor %}</div>
+<p><label>Usuario / equipo (opcional): <input type="text" name="usuario" placeholder="equipo-1"></label></p>
+<button type="submit">Ejecutar y guardar simulación</button></form>
 {% endblock %}

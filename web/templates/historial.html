@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block contenido %}
+<h1>Historial de experimentos</h1>
+<form method="get"><input type="text" name="q" value="{{ q }}" placeholder="Buscar por módulo, escenario, método, equipo, fecha o #id" size="46"> <button type="submit">Buscar</button></form>
+{% if filas %}<table><tr><th>#</th><th>Fecha (UTC)</th><th>Módulo</th><th>Escenario</th><th>Métodos</th><th>Equipo</th><th></th></tr>
+{% for f in filas %}<tr><td>{{ f.id }}</td><td>{{ f.fecha }}</td><td>{{ f.caso }}</td><td>{{ ETIQUETAS[f.tipo] }}</td><td>{{ f.metodos|abrev(48) }}</td><td>{{ f.usuario_equipo or '—' }}</td>
+<td><a href="{{ url_for('simulacion', sim_id=f.id) }}">Abrir</a> <form method="post" action="{{ url_for('relanzar', sim_id=f.id) }}" style="display:inline"><button type="submit" class="mini">Relanzar</button></form></td></tr>{% endfor %}</table>
+{% else %}<p class="panel">No hay simulaciones guardadas{{ ' para esa búsqueda' if q }}. Ejecuta una desde un módulo o con «Ejecutar los 12 escenarios» en el <a href="{{ url_for('inicio') }}">inicio</a>.</p>{% endif %}
+{% endblock %}

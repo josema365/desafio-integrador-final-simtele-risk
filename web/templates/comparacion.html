@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block contenido %}
+<h1>Panel general de comparación</h1>
+<p>Última simulación guardada de cada combinación módulo × escenario (3 × 4). «Fallos» cuenta métodos que no convergieron o no son aplicables en esa ejecución: no equivale a mal condicionamiento ni a riesgo físico.</p>
+<table><tr><th>Módulo</th>{% for t in TIPOS %}<th>{{ ETIQUETAS[t] }}</th>{% endfor %}</tr>
+{% for k in ORDEN %}<tr><td><b>{{ CASOS[k].NOMBRE }}</b></td>
+{% for t in TIPOS %}{% set c = celdas.get((k, t)) %}<td>{% if c %}<a href="{{ url_for('simulacion', sim_id=c.id) }}">#{{ c.id }}</a> · {{ c.titular }}<br><small>{{ c.fallos }} de {{ c.total }} métodos sin convergencia/aplicabilidad</small>{% else %}<a href="{{ url_for('modulo', n=NUMERO[k], tipo=t) }}">Ejecutar</a>{% endif %}</td>{% endfor %}</tr>{% endfor %}</table>
+<form method="post" action="{{ url_for('ejecutar_todo') }}"><button type="submit">Ejecutar los 12 escenarios (valores por defecto)</button></form>
+{% endblock %}

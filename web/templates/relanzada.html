@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block contenido %}
+<h1>Relanzamiento de la simulación #{{ original }}</h1>
+<p>Se recuperaron los parámetros guardados, se repitió el cálculo y se guardó como la simulación <a href="{{ url_for('simulacion', sim_id=nuevo) }}">#{{ nuevo }}</a>. Comparación con la original (diferencia relativa del resultado, tolerancia 1e-12):</p>
+<table><tr><th>Método</th><th>Diferencia</th><th>¿Coincide?</th></tr>
+{% for c in comp %}<tr><td>{{ c.metodo }}</td><td>{{ c.diff|f(3) }}</td><td class="{{ 'si' if c.coincide else 'no' }}">{{ 'sí' if c.coincide else 'NO' }}</td></tr>{% endfor %}</table>
+<a class="btn" href="{{ url_for('simulacion', sim_id=nuevo) }}">Abrir la nueva simulación</a> <a class="btn sec" href="{{ url_for('historial') }}">Historial</a>
+{% endblock %}

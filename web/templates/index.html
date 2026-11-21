@@ -1,6 +1,9 @@
 {% extends "base.html" %}{% block contenido %}
 <h1>SIMTELE-RISK</h1>
-<p>Simulador educativo de <b>Métodos Numéricos</b> con cuatro casos de estudio. Cada módulo se ejecutará en tres escenarios: <b>NORMAL</b>, <b>ESTRÉS</b> y <b>MAL CONDICIONADO</b>.</p>
+<p>Simulador educativo de <b>Métodos Numéricos</b> con cuatro casos de estudio. Cada módulo se ejecuta en tres escenarios — <b>NORMAL</b>, <b>ESTRÉS</b> y <b>MAL CONDICIONADO</b> — y separa la <i>conclusión numérica</i> (sobre los métodos) de la <i>conclusión del problema</i> (sobre el caso).</p>
 <div class="tarjetas">
-{% for i, m in MODULOS.items() %}<a class="tarjeta" href="{{ url_for('modulo', n=i) }}"><div class="ico">{{ m.icono }}</div><h3>{{ i }}. {{ m.nombre }}</h3><div>{{ m.pregunta }}</div></a>{% endfor %}
-</div>{% endblock %}
+{% for k in ORDEN %}{% set m = CASOS[k] %}<a class="tarjeta" href="{{ url_for('modulo', n=NUMERO[k]) }}"><div class="ico">{{ ICONOS[k] }}</div><h3>{{ NUMERO[k] }}. {{ CORTO[k] }}</h3><div><b>{{ m.TITULO }}</b></div><div>{{ m.PREGUNTA }}</div><p><span class="etiqueta">{{ m.METODOS.split(' · ')[0][:60] }}</span></p></a>{% endfor %}
+</div>
+<form method="post" action="{{ url_for('ejecutar_todo') }}" style="display:inline"><button type="submit">Ejecutar los 12 escenarios (valores por defecto)</button></form>
+<a class="btn sec" href="{{ url_for('comparacion') }}">Panel de comparación</a> <a class="btn sec" href="{{ url_for('historial') }}">Historial</a>
+{% endblock %}

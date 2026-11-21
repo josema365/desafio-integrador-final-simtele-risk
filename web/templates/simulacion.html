@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% macro tabla_filas(filas) %}{% if filas %}<table class="chica"><tr>{% for c in filas[0].keys() %}<th>{{ c }}</th>{% endfor %}</tr>
+{% for r in filas %}<tr>{% for v in r.values() %}<td>{{ v|f(4) if v is number else (v if v is not none else '—') }}</td>{% endfor %}</tr>{% endfor %}</table>{% endif %}{% endmacro %}
+{% block titulo %}Simulación #{{ s.id }} · SIMTELE-RISK{% endblock %}{% block contenido %}
+<h1>Simulación #{{ s.id }} · {{ m.NOMBRE }} · {{ ETIQUETAS[s.tipo] }}</h1>
+<p>{{ s.fecha }} UTC · estado <b>{{ s.estado }}</b> · equipo: {{ s.usuario_equipo or '—' }} · hash de parámetros <code>{{ s.hash_parametros }}</code></p>
+<div class="panel"><b>Parámetros (recuperados de la base):</b>
+{% for k, v in s.params.items() %}{% if v is mapping %}<span class="par">{{ k }}: {{ v|corto }}</span>{% else %}<span class="par">{{ k }} = {{ v|f(6) if v is number else v }}</span>{% endif %}{% endfor %}</div>
+<h2>Resultados por método</h2>
+<table><tr><th>Método</th><th>¿Convergió / aplicable?</th><th>Iteraciones o pasos</th><th>Error principal</th><th>Paso</th><th>t (ms)</th><th>Nota</th></tr>
+{% for e in s.ejecuciones %}<tr><td>{{ e.metodo }}</td><td class="{{ 'si' if e.convergio else 'no' }}">{{ 'sí' if e.convergio else 'NO' }}</td><td>{{ e.pasos if e.pasos is not none else '—' }}</td>
+<td>{{ e.principal|f(3) }}</td><td>{{ e.paso|f(3) }}</td><td>{{ '%.2f' % e.tiempo_ms }}</td><td>{{ e.texto }}</td></tr>{% endfor %}</table>
+<h2>Gráficos (recuperados de la base de datos)</h2>
+<div class="graficos">{% for g in graficos %}<div><b>{{ g.titulo }}</b>{{ g.svg|safe }}</div>{% endfor %}</div>
+<h2>Interpretación</h2>
+<div class="dos">
+<div class="panel num"><b>Conclusión numérica (sobre los métodos)</b><ul>{% for t in interp.numerica %}<li>{{ t }}</li>{% endfor %}</ul></div>
+<div class="panel prob"><b>Conclusión del problema (sobre el caso)</b><ul>{% for t in interp.problema %}<li>{{ t }}</li>{% endfor %}</ul></div></div>
+<h2>Tablas de iteraciones / refinamiento</h2>
+{% for e in s.ejecuciones %}<details><summary>{{ e.metodo }} — {{ e.iteraciones|length }} fila(s){% if e.tolerancia %} · tol {{ e.tolerancia }}{% endif %}</summary>
+{% if e.iteraciones %}<table class="chica"><tr><th>#</th><th>Aproximación / datos</th><th>Residual</th><th>Error abs.</th><th>Error rel.</th></tr>
+{% for r in e.iteraciones[:60] %}<tr><td>{{ r.numero }}</td><td class="mono">{{ r.aprox|corto }}</td><td>{{ r.residual|f(3) }}</td><td>{{ r.error_abs|f(3) }}</td><td>{{ r.error_rel|f(3) }}</td></tr>{% endfor %}</table>
+{% if e.iteraciones|length > 60 %}<small>Se muestran las primeras 60 filas.</small>{% endif %}{% else %}<p class="nota">{{ e.texto }}</p>{% endif %}
+{% if e.valor.sensibilidad %}<b>Sensibilidad a perturbaciones</b>{{ tabla_filas(e.valor.sensibilidad) }}{% endif %}
+{% if e.valor.radios %}<p class="nota">κ(A) = {{ e.valor.radios.kappa|f(4) }}, ρ(T_J) = {{ e.valor.radios.rho_J|f(4) }}, ρ(T_GS) = {{ e.valor.radios.rho_GS|f(4) }}, n = {{ e.valor.radios.n }}</p>{% endif %}
+</details>{% endfor %}
+<form method="post" action="{{ url_for('relanzar', sim_id=s.id) }}" style="margin-top:1rem"><button type="submit">Relanzar esta simulación</button>
+<a class="btn sec" href="{{ url_for('modulo', n=n, tipo=s.tipo) }}">Nueva ejecución del módulo</a> <a class="btn sec" href="{{ url_for('historial') }}">Historial</a> <a class="btn sec" href="{{ url_for('comparacion') }}">Comparación</a></form>
+{% endblock %}
